@@ -23,21 +23,21 @@ const SetBudgetForm = () => {
   const [allBudgets, setAllBudgets] = useState<Budget[]>([]);
 
   useEffect(() => {
-    const fetchBudgets = async () => {
-      const res = await fetch('/api/budget');
-      if (!res.ok) return;
-      const budgets: Budget[] = await res.json();
-      setAllBudgets(budgets);
+  const fetchBudgets = async () => {
+    const res = await fetch('/api/budget');
+    if (!res.ok) return;
+    const budgets: Budget[] = await res.json();
+    setAllBudgets(budgets);
 
-      const existing = budgets.find((b) => b.month === currentMonth);
-      if (existing) {
-        setCurrentMonthBudget(existing);
-        setSubmitted(true);
-        setForm({ month: existing.month, amount: existing.amount.toString() });
-      }
-    };
-    fetchBudgets();
-  }, []);
+    const existing = budgets.find((b) => b.month === currentMonth);
+    if (existing) {
+      setCurrentMonthBudget(existing);
+      setSubmitted(true);
+      setForm({ month: existing.month, amount: existing.amount.toString() });
+    }
+  };
+  fetchBudgets();
+}, [currentMonth]); 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

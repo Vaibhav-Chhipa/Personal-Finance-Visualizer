@@ -18,7 +18,6 @@ export default function TransactionForm() {
     category: '',
   });
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
 
   const fetchTransactions = async () => {
@@ -101,7 +100,6 @@ export default function TransactionForm() {
 
         <h2 className="text-xl font-semibold">Transactions of the month</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           <div>
             <Label htmlFor="amount">Amount</Label>
             <Input
