@@ -1,4 +1,3 @@
-// src/types.ts
 export interface Transaction {
     _id: string;
     amount: string;

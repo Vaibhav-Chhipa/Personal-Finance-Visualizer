@@ -20,15 +20,15 @@ type CategoryData = {
 };
 
 const CategoryPieChart = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]); // Set specific type for transactions
-  const [selectedMonth, setSelectedMonth] = useState<string>(() => new Date().toISOString().slice(0, 7)); // default: current month
-  const [categoryData, setCategoryData] = useState<CategoryData[]>([]); // Set specific type for categoryData
+  const [transactions, setTransactions] = useState<Transaction[]>([]); 
+  const [selectedMonth, setSelectedMonth] = useState<string>(() => new Date().toISOString().slice(0, 7)); 
+  const [categoryData, setCategoryData] = useState<CategoryData[]>([]); 
 
   useEffect(() => {
     const fetchTransactions = async () => {
       const res = await fetch('/api/transactions');
       if (res.ok) {
-        const data: Transaction[] = await res.json(); // Fetch transactions with specific type
+        const data: Transaction[] = await res.json();
         setTransactions(data);
       } else {
         console.error('Failed to fetch transactions');

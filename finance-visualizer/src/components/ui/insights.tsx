@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 
-// Define types for the data
 type SpendingData = {
   _id: string;
   totalSpending: number;
@@ -43,7 +42,6 @@ const Insights = () => {
     }
   };
 
-  // Use useCallback to memoize the insights calculation
   const calculateMonthlyInsights = useCallback(() => {
     const allMonths = Array.from(
       new Set([...spendingData.map(s => s._id), ...budgetData.map(b => b.month)])
@@ -74,7 +72,7 @@ const Insights = () => {
     if (spendingData.length > 0 || budgetData.length > 0) {
       calculateMonthlyInsights();
     }
-  }, [spendingData, budgetData, calculateMonthlyInsights]); // Add calculateMonthlyInsights as dependency
+  }, [spendingData, budgetData, calculateMonthlyInsights]);
 
   return (
     <div className="mt-8">
