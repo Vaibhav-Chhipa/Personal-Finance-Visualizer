@@ -25,11 +25,11 @@ const Dashboard = () => {
 
     const totalExpenses = transactions.reduce((acc, t) => acc + Number(t.amount), 0);
 
-    const categoryData = transactions.reduce((acc: any, t: any) => {
+    const categoryData = transactions.reduce((acc: Record<string, number>, t: Transaction) => {
         acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
         return acc;
     }, {});
-
+    
     return (
         <div className="relative min-h-screen">
             <div

@@ -1,14 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+// Define types for the data
+type SpendingData = {
+  _id: string;
+  totalSpending: number;
+};
+
+type BudgetData = {
+  month: string;
+  amount: number;
+};
+
+type Insight = {
+  month: string;
+  spending: number;
+  budget: number;
+  budgetPercentage: string;
+};
 
 const Insights = () => {
-  const [spendingData, setSpendingData] = useState<any[]>([]);
-  const [budgetData, setBudgetData] = useState<any[]>([]);
-  const [insightsList, setInsightsList] = useState<any[]>([]);
+  const [spendingData, setSpendingData] = useState<SpendingData[]>([]);
+  const [budgetData, setBudgetData] = useState<BudgetData[]>([]);
+  const [insightsList, setInsightsList] = useState<Insight[]>([]);
 
   const fetchSpendingData = async () => {
     const res = await fetch('/api/spending');
     if (res.ok) {
-      const data = await res.json();
+      const data: SpendingData[] = await res.json();
       setSpendingData(data);
     } else {
       console.error('Error fetching spending data');
@@ -18,14 +36,15 @@ const Insights = () => {
   const fetchBudgetData = async () => {
     const res = await fetch('/api/budget');
     if (res.ok) {
-      const data = await res.json();
+      const data: BudgetData[] = await res.json();
       setBudgetData(data);
     } else {
       console.error('Error fetching budget data');
     }
   };
 
-  const calculateMonthlyInsights = () => {
+  // Use useCallback to memoize the insights calculation
+  const calculateMonthlyInsights = useCallback(() => {
     const allMonths = Array.from(
       new Set([...spendingData.map(s => s._id), ...budgetData.map(b => b.month)])
     ).sort();
@@ -44,7 +63,7 @@ const Insights = () => {
     });
 
     setInsightsList(insights);
-  };
+  }, [spendingData, budgetData]);
 
   useEffect(() => {
     fetchSpendingData();
@@ -55,7 +74,7 @@ const Insights = () => {
     if (spendingData.length > 0 || budgetData.length > 0) {
       calculateMonthlyInsights();
     }
-  }, [spendingData, budgetData]);
+  }, [spendingData, budgetData, calculateMonthlyInsights]); // Add calculateMonthlyInsights as dependency
 
   return (
     <div className="mt-8">

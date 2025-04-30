@@ -30,18 +30,9 @@ export default function TransactionForm() {
   useEffect(() => {
     fetchTransactions();
   }, []);
-  const validateForm = () => {
-    if (!form.amount || !form.date || !form.description || !form.category) {
-      setError('All fields are required.');
-      return false;
-    }
-    setError(null);
-    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-    return true;
-  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
     const method = form._id ? 'PATCH' : 'POST';
     try {
       const res = await fetch('/api/transactions', {
@@ -110,6 +101,7 @@ export default function TransactionForm() {
 
         <h2 className="text-xl font-semibold">Transactions of the month</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           <div>
             <Label htmlFor="amount">Amount</Label>
             <Input

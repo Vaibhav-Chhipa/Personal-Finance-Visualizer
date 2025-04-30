@@ -1,6 +1,12 @@
 import * as React from 'react';
 
-export function Select({ value, onValueChange, children }: any) {
+interface SelectProps {
+  value: string;
+  onValueChange: (value: string) => void;
+  children: React.ReactNode;
+}
+
+export function Select({ value, onValueChange, children }: SelectProps) {
   return (
     <div className="relative">
       <select 
@@ -14,6 +20,11 @@ export function Select({ value, onValueChange, children }: any) {
   );
 }
 
-export function SelectItem({ value, children }: any) {
+interface SelectItemProps {
+  value: string;
+  children: React.ReactNode;
+}
+
+export function SelectItem({ value, children }: SelectItemProps) {
   return <option value={value}>{children}</option>;
 }

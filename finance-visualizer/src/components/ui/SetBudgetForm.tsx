@@ -1,167 +1,3 @@
-// 'use client';
-
-// import { useState, useEffect } from 'react';
-// import { Label } from '@/components/ui/label';
-// import { Input } from '@/components/ui/input';
-// import { Button } from '@/components/ui/button';
-
-// const SetBudgetForm = () => {
-//   const [form, setForm] = useState({ month: '', amount: '' });
-//   const [submitted, setSubmitted] = useState(false);
-//   const [editing, setEditing] = useState(false);
-//   const [currentMonthBudget, setCurrentMonthBudget] = useState<any>(null);
-//   const [allBudgets, setAllBudgets] = useState<any[]>([]);
-
-
-//   const currentMonth = new Date().toISOString().slice(0, 7);
-
-//   const checkExistingBudget = async () => {
-//     const res = await fetch('/api/budget');
-//     const budgets = await res.json();
-//     const existing = budgets.find((b: any) => b.month === currentMonth);
-//     if (existing) {
-//       setCurrentMonthBudget(existing);
-//       setSubmitted(true);
-//       setForm({ month: existing.month, amount: existing.amount });
-//     }
-//   };
-  
-
-//   useEffect(() => {
-//     checkExistingBudget();
-//   }, []);
-
-//   // const handleSubmit = async (e: any) => {
-//   //   e.preventDefault();
-
-//   //   const method = editing ? 'PUT' : 'POST';
-
-//   //   const res = await fetch('/api/budget', {
-//   //     method,
-//   //     headers: { 'Content-Type': 'application/json' },
-//   //     // body: JSON.stringify({
-//   //     //   _id: currentMonthBudget?._id,
-//   //     //   month: form.month || currentMonth,
-//   //     //   amount: parseFloat(form.amount),
-//   //     // }),
-//   //     body: JSON.stringify({
-//   //       _id: editing ? currentMonthBudget?._id : undefined, // only send _id if editing
-//   //       month: form.month,
-//   //       amount: parseFloat(form.amount),
-//   //     }),      
-//   //   });
-//   //   checkExistingBudget(); // to refresh current month if needed
-//   //   setForm({ month: '', amount: '' }); 
-
-//   //   if (res.ok) {
-//   //     const saved = await res.json();
-//   //     setCurrentMonthBudget(saved);
-//   //     setEditing(false);
-//   //     setSubmitted(true);
-//   //   }
-//   // };
-//   const handleSubmit = async (e: any) => {
-//     e.preventDefault();
-  
-//     const isNewMonth =
-//       !currentMonthBudget || currentMonthBudget.month !== (form.month || currentMonth);
-  
-//     const method = isNewMonth ? 'POST' : 'PUT';
-  
-//     const res = await fetch('/api/budget', {
-//       method,
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({
-//         _id: isNewMonth ? undefined : currentMonthBudget._id,
-//         month: form.month || currentMonth,
-//         amount: parseFloat(form.amount),
-//       }),
-//     });
-  
-//     if (res.ok) {
-//       const saved = await res.json();
-//       await checkExistingBudget(); // refresh data
-//       setEditing(false);
-//       setSubmitted(true);
-//     }
-//   };
-  
-
-//   if (submitted && !editing) {
-//     return (
-//       <div className="mt-4">
-//         <h2 className="text-xl font-semibold">Budget for {currentMonth}</h2>
-//         <p className="mt-2 font-medium">₹{currentMonthBudget?.amount}</p>
-//         <Button className="mt-2" onClick={() => setEditing(true)}>Edit</Button>
-//       </div>
-//     );
-//   }
-  
-  
-
-//   return (
-//     <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-//       <h2 className="text-xl font-semibold">{editing ? 'Edit Budget' : 'Set Budget'}</h2>
-
-//       {/* {!submitted && (
-//         <div>
-//           <Label htmlFor="month">Month</Label>
-//           <Input
-//             id="month"
-//             name="month"
-//             type="month"
-//             value={form.month}
-//             onChange={(e) => setForm({ ...form, month: e.target.value })}
-//             required
-//           />
-//         </div>
-//       )} */}
-//       {/* <div>
-//         <Label htmlFor="month">Month</Label>
-//         <Input
-//           id="month"
-//           name="month"
-//           type="month"
-//           value={form.month}
-//           onChange={(e) => setForm({ ...form, month: e.target.value })}
-//           required
-//           disabled={!editing && submitted} // disables only when not editing
-//         />
-//       </div>
-//        */}
-//        <div>
-//   <Label htmlFor="month">Month</Label>
-//   <Input
-//     id="month"
-//     name="month"
-//     type="month"
-//     value={form.month}
-//     onChange={(e) => setForm({ ...form, month: e.target.value })}
-//     required
-//   />
-// </div>
-
-
-//       <div>
-//         <Label htmlFor="amount">Amount</Label>
-//         <Input
-//           id="amount"
-//           name="amount"
-//           type="number"
-//           value={form.amount}
-//           onChange={(e) => setForm({ ...form, amount: e.target.value })}
-//           required
-//         />
-//       </div>
-
-//       <Button type="submit">{editing ? 'Update Budget' : 'Submit'}</Button>
-//     </form>
-//   );
-// };
-
-// export default SetBudgetForm;
-
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -169,45 +5,48 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
+type Budget = {
+  _id?: string;
+  month: string;
+  amount: number;
+};
+
 const SetBudgetForm = () => {
   const [form, setForm] = useState({ month: '', amount: '' });
   const [submitted, setSubmitted] = useState(false);
   const [editing, setEditing] = useState(false);
-  const [currentMonthBudget, setCurrentMonthBudget] = useState<any>(null);
-  const [allBudgets, setAllBudgets] = useState<any[]>([]);
-
+  const [currentMonthBudget, setCurrentMonthBudget] = useState<Budget | null>(null);
+  const [allBudgets, setAllBudgets] = useState<Budget[]>([]);
+  
   const currentMonth = new Date().toISOString().slice(0, 7);
 
-  // Function to check for existing budget for the current month
-  const checkExistingBudget = async () => {
+  const checkExistingBudget = async (): Promise<void> => {
     const res = await fetch('/api/budget');
-    const budgets = await res.json();
-    const existing = budgets.find((b: any) => b.month === currentMonth);
+    if (!res.ok) return;
+    const budgets: Budget[] = await res.json();
+    const existing = budgets.find((b) => b.month === currentMonth);
     if (existing) {
       setCurrentMonthBudget(existing);
       setSubmitted(true);
-      setForm({ month: existing.month, amount: existing.amount });
+      setForm({ month: existing.month, amount: existing.amount.toString() });
     }
   };
-
-  // Function to fetch all saved budgets
-  const fetchAllBudgets = async () => {
+  
+  const fetchAllBudgets = async (): Promise<void> => {
     const res = await fetch('/api/budget');
-    const budgets = await res.json();
+    if (!res.ok) return;
+    const budgets: Budget[] = await res.json();
     setAllBudgets(budgets);
   };
-
-  // Fetch current budget and all budgets on component mount
+  
   useEffect(() => {
     checkExistingBudget();
     fetchAllBudgets(); // Fetch all budgets when the component mounts
   }, []);
 
-  // Handle form submission for both new and editing budgets
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // const isNewMonth = !currentMonthBudget || currentMonthBudget.month !== (form.month || currentMonth);
     const existingBudget = allBudgets.find((b) => b.month === form.month);
     const isNewMonth = !existingBudget;
 
@@ -217,14 +56,14 @@ const SetBudgetForm = () => {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        _id: isNewMonth ? undefined : currentMonthBudget?._id, // Pass _id if editing an existing budget
+        ...(isNewMonth ? {} : { _id: currentMonthBudget?._id }),
         month: form.month || currentMonth,
         amount: parseFloat(form.amount),
       }),
     });
+    
 
     if (res.ok) {
-      const saved = await res.json();
       await checkExistingBudget(); // Refresh the current month data
       await fetchAllBudgets(); // Refresh the list of all budgets
       setEditing(false);
@@ -232,23 +71,23 @@ const SetBudgetForm = () => {
     }
   };
 
-  // Handle the edit button to enable editing mode for any month
   const handleEdit = (month: string) => {
     const monthBudget = allBudgets.find((b) => b.month === month);
     if (monthBudget) {
       setCurrentMonthBudget(monthBudget);
-      setForm({ month: monthBudget.month, amount: monthBudget.amount });
+      setForm({ month: monthBudget.month, amount: monthBudget.amount.toString() });
       setEditing(true);
-      setSubmitted(false); // Set submitted to false when editing a budget
+      setSubmitted(false);
     }
   };
+
   const handleDelete = async (_id: string) => {
     const res = await fetch('/api/budget', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ _id }),
     });
-  
+
     if (res.ok) {
       await fetchAllBudgets();
       if (currentMonthBudget?._id === _id) {
@@ -257,7 +96,6 @@ const SetBudgetForm = () => {
       }
     }
   };
-  
 
   return (
     <div className="mt-4">
@@ -318,7 +156,7 @@ const SetBudgetForm = () => {
                     <td className="py-1">₹{b.amount}</td>
                     <td className="py-1  flex gap-2">
                       <Button onClick={() => handleEdit(b.month)}>Edit</Button>
-                      <Button variant="destructive" onClick={() => handleDelete(b._id)}>Delete</Button>
+                      <Button variant="destructive" onClick={() => b._id && handleDelete(b._id)}>Delete</Button>
                     </td>
                   </tr>
                 ))}

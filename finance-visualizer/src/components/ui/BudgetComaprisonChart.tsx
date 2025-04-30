@@ -1,31 +1,37 @@
 import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
+type BudgetSpending = {
+  month: string;
+  budgetAmount: number;
+  actualSpending: number;
+};
+
+
 const BudgetComparisonChart = () => {
-  // const [budgetData, setBudgetData] = useState<any[]>([]);
-  const [spendingData, setSpendingData] = useState<any[]>([]);
+  const [spendingData, setSpendingData] = useState<BudgetSpending[]>([]);
 
   const fetchComparisonData = async () => {
     const resBudget = await fetch('/api/budget');
     const resSpending = await fetch('/api/spending');
-
+  
     if (resBudget.ok && resSpending.ok) {
-      const budgets = await resBudget.json();
-      const spending = await resSpending.json();
-
-      const mergedData = budgets.map((budget: any) => {
-        const actualSpending = spending.find((spend: any) => spend._id === budget.month);
+      const budgets: { month: string; amount: number }[] = await resBudget.json();
+      const spending: { _id: string; totalSpending: number }[] = await resSpending.json();
+  
+      const mergedData: BudgetSpending[] = budgets.map((budget) => {
+        const actualSpending = spending.find((spend) => spend._id === budget.month);
         return {
           month: budget.month,
           budgetAmount: budget.amount,
           actualSpending: actualSpending ? actualSpending.totalSpending : 0,
         };
       });
-
-      // setBudgetData(mergedData);
+  
       setSpendingData(mergedData);
     }
   };
+  
 
   useEffect(() => {
     fetchComparisonData();

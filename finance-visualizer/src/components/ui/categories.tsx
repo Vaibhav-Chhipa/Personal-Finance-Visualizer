@@ -7,16 +7,28 @@ import {
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#00C49F', '#FFBB28'];
 
+// Define types for transactions and category data
+type Transaction = {
+  category: string;
+  amount: number;
+  date: string;
+};
+
+type CategoryData = {
+  name: string;
+  value: number;
+};
+
 const CategoryPieChart = () => {
-  const [transactions, setTransactions] = useState<any[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState(() => new Date().toISOString().slice(0, 7)); // default: current month
-  const [categoryData, setCategoryData] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]); // Set specific type for transactions
+  const [selectedMonth, setSelectedMonth] = useState<string>(() => new Date().toISOString().slice(0, 7)); // default: current month
+  const [categoryData, setCategoryData] = useState<CategoryData[]>([]); // Set specific type for categoryData
 
   useEffect(() => {
     const fetchTransactions = async () => {
       const res = await fetch('/api/transactions');
       if (res.ok) {
-        const data = await res.json();
+        const data: Transaction[] = await res.json(); // Fetch transactions with specific type
         setTransactions(data);
       } else {
         console.error('Failed to fetch transactions');
@@ -34,7 +46,7 @@ const CategoryPieChart = () => {
       categoryTotals[tx.category] += tx.amount;
     });
 
-    const formatted = Object.entries(categoryTotals).map(([category, amount]) => ({
+    const formatted: CategoryData[] = Object.entries(categoryTotals).map(([category, amount]) => ({
       name: category,
       value: amount
     }));
