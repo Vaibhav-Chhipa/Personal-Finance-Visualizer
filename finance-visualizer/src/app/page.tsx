@@ -36,6 +36,7 @@ export default function TransactionForm() {
       return false;
     }
     setError(null);
+    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
     return true;
   };
   const handleSubmit = async (e: React.FormEvent) => {
@@ -65,6 +66,7 @@ export default function TransactionForm() {
       }
     } catch (error) {
       console.error(`Error: ${error}`);
+      
     }
   };
 

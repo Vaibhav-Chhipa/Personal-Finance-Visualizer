@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const BudgetComparisonChart = () => {
-  const [budgetData, setBudgetData] = useState<any[]>([]);
+  // const [budgetData, setBudgetData] = useState<any[]>([]);
   const [spendingData, setSpendingData] = useState<any[]>([]);
 
   const fetchComparisonData = async () => {
@@ -22,7 +22,7 @@ const BudgetComparisonChart = () => {
         };
       });
 
-      setBudgetData(mergedData);
+      // setBudgetData(mergedData);
       setSpendingData(mergedData);
     }
   };
@@ -32,20 +32,6 @@ const BudgetComparisonChart = () => {
   }, []);
 
   return (
-    // <div className="mt-8">
-    //   <h2 className="text-xl font-semibold">Budget vs Actual Comparison</h2>
-    //   <ResponsiveContainer width="100%" height={400}>
-    //     <BarChart data={spendingData}>
-    //       <CartesianGrid strokeDasharray="3 3" />
-    //       <XAxis dataKey="month" />
-    //       <YAxis />
-    //       <Tooltip />
-    //       <Legend />
-    //       <Bar dataKey="budgetAmount" fill="#8884d8" name="Budget" />
-    //       <Bar dataKey="actualSpending" fill="#82ca9d" name="Actual Spending" />
-    //     </BarChart>
-    //   </ResponsiveContainer>
-    // </div>
     <div className="mt-8 max-w-4xl mx-auto">
   <h2 className="text-xl font-semibold mb-4 text-center">Budget vs Actual Comparison</h2>
   <ResponsiveContainer width="100%" height={300}>

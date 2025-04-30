@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import BudgetComparisonChart from '@/components/ui/BudgetComaprisonChart';
 import Insights from '@/components/ui/insights';
 import Link from 'next/link';
@@ -30,13 +29,6 @@ const Dashboard = () => {
         acc[t.category] = (acc[t.category] || 0) + Number(t.amount);
         return acc;
     }, {});
-
-    const pieData = Object.keys(categoryData).map((cat) => ({
-        name: cat,
-        value: categoryData[cat],
-    }));
-
-    const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#00C49F', '#FFBB28'];
 
     return (
         <div className="relative min-h-screen">
@@ -81,16 +73,6 @@ const Dashboard = () => {
 
                     <div className="mt-12 bg-white p-6 rounded-lg shadow-lg">
                         <h2 className="text-2xl font-semibold mb-4 text-gray-700">Category-wise Expenses</h2>
-                        {/* <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie data={pieData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100}>
-                                    {pieData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer> */}
                         <CategoryPieChart/>
                     </div>
 
