@@ -12,48 +12,41 @@ type Budget = {
 };
 
 const SetBudgetForm = () => {
-  const [form, setForm] = useState({ month: '', amount: '' });
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const [form, setForm] = useState<{ month: string; amount: string }>({
+    month: currentMonth,
+    amount: '',
+  });
   const [submitted, setSubmitted] = useState(false);
   const [editing, setEditing] = useState(false);
   const [currentMonthBudget, setCurrentMonthBudget] = useState<Budget | null>(null);
   const [allBudgets, setAllBudgets] = useState<Budget[]>([]);
-  
-  const currentMonth = new Date().toISOString().slice(0, 7);
 
-  const checkExistingBudget = async (): Promise<void> => {
-    const res = await fetch('/api/budget');
-    if (!res.ok) return;
-    const budgets: Budget[] = await res.json();
-    const existing = budgets.find((b) => b.month === currentMonth);
-    if (existing) {
-      setCurrentMonthBudget(existing);
-      setSubmitted(true);
-      setForm({ month: existing.month, amount: existing.amount.toString() });
-    }
-  };
-  
-  const fetchAllBudgets = async (): Promise<void> => {
-    const res = await fetch('/api/budget');
-    if (!res.ok) return;
-    const budgets: Budget[] = await res.json();
-    setAllBudgets(budgets);
-  };
-  
   useEffect(() => {
-    checkExistingBudget();
-    fetchAllBudgets(); // Fetch all budgets when the component mounts
+    const fetchBudgets = async () => {
+      const res = await fetch('/api/budget');
+      if (!res.ok) return;
+      const budgets: Budget[] = await res.json();
+      setAllBudgets(budgets);
+
+      const existing = budgets.find((b) => b.month === currentMonth);
+      if (existing) {
+        setCurrentMonthBudget(existing);
+        setSubmitted(true);
+        setForm({ month: existing.month, amount: existing.amount.toString() });
+      }
+    };
+    fetchBudgets();
   }, []);
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const existingBudget = allBudgets.find((b) => b.month === form.month);
     const isNewMonth = !existingBudget;
 
-    const method = isNewMonth ? 'POST' : 'PUT';
-
     const res = await fetch('/api/budget', {
-      method,
+      method: isNewMonth ? 'POST' : 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         ...(isNewMonth ? {} : { _id: currentMonthBudget?._id }),
@@ -61,21 +54,24 @@ const SetBudgetForm = () => {
         amount: parseFloat(form.amount),
       }),
     });
-    
 
     if (res.ok) {
-      await checkExistingBudget(); // Refresh the current month data
-      await fetchAllBudgets(); // Refresh the list of all budgets
-      setEditing(false);
+      const updatedRes = await fetch('/api/budget');
+      const updatedBudgets: Budget[] = await updatedRes.json();
+      setAllBudgets(updatedBudgets);
+
+      const updated = updatedBudgets.find((b) => b.month === currentMonth);
+      setCurrentMonthBudget(updated || null);
       setSubmitted(true);
+      setEditing(false);
     }
   };
 
   const handleEdit = (month: string) => {
-    const monthBudget = allBudgets.find((b) => b.month === month);
-    if (monthBudget) {
-      setCurrentMonthBudget(monthBudget);
-      setForm({ month: monthBudget.month, amount: monthBudget.amount.toString() });
+    const budget = allBudgets.find((b) => b.month === month);
+    if (budget) {
+      setForm({ month: budget.month, amount: budget.amount.toString() });
+      setCurrentMonthBudget(budget);
       setEditing(true);
       setSubmitted(false);
     }
@@ -89,7 +85,10 @@ const SetBudgetForm = () => {
     });
 
     if (res.ok) {
-      await fetchAllBudgets();
+      const updatedRes = await fetch('/api/budget');
+      const updatedBudgets: Budget[] = await updatedRes.json();
+      setAllBudgets(updatedBudgets);
+
       if (currentMonthBudget?._id === _id) {
         setCurrentMonthBudget(null);
         setSubmitted(false);
@@ -127,6 +126,8 @@ const SetBudgetForm = () => {
               id="amount"
               name="amount"
               type="number"
+              min="0"
+              step="0.01"
               value={form.amount}
               onChange={(e) => setForm({ ...form, amount: e.target.value })}
               required
@@ -154,7 +155,7 @@ const SetBudgetForm = () => {
                   <tr key={b._id} className="border-b">
                     <td className="py-1">{b.month}</td>
                     <td className="py-1">₹{b.amount}</td>
-                    <td className="py-1  flex gap-2">
+                    <td className="py-1 flex gap-2">
                       <Button onClick={() => handleEdit(b.month)}>Edit</Button>
                       <Button variant="destructive" onClick={() => b._id && handleDelete(b._id)}>Delete</Button>
                     </td>

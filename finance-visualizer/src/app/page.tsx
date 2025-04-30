@@ -145,7 +145,7 @@ export default function TransactionForm() {
               ))}
             </Select>
           </div>
-          <Button type="submit">{form._id ? 'Update' : 'Add'} Transaction</Button>
+          <   Button type="submit">{form._id ? 'Update' : 'Add'} Transaction</Button>
         </form>
         <div className="mt-10">
           <h2 className="text-xl font-semibold mb-2">Transactions</h2>

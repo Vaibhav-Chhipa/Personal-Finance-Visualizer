@@ -4,6 +4,7 @@ interface SelectProps {
   value: string;
   onValueChange: (value: string) => void;
   children: React.ReactNode;
+  
 }
 
 export function Select({ value, onValueChange, children }: SelectProps) {
@@ -23,8 +24,13 @@ export function Select({ value, onValueChange, children }: SelectProps) {
 interface SelectItemProps {
   value: string;
   children: React.ReactNode;
+  disabled?: boolean;
 }
 
-export function SelectItem({ value, children }: SelectItemProps) {
-  return <option value={value}>{children}</option>;
+export function SelectItem({ value, children, disabled }: SelectItemProps) {
+  return (
+    <option value={value} disabled={disabled}>
+      {children}
+    </option>
+  );
 }
