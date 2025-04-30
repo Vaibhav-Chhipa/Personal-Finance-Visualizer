@@ -7,31 +7,32 @@ A full-stack web application to manage and visualize your personal finances. Bui
 - 📊 View budget vs actual comparison charts  
 - 📈 Gain simple spending insights
 
-## Getting Started
+## 🛠 Tech Stack
 
-First, run the development server:
+- **Frontend**: [Next.js (App Router)](https://nextjs.org/), [Tailwind CSS](https://tailwindcss.com/), [Recharts](https://recharts.org/)
+- **Backend**: API Routes (Next.js App Router)
+- **Database**: [MongoDB](https://www.mongodb.com/)
+- **ORM**: [Mongoose](https://mongoosejs.com/)
 
-```bash
-npm run dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🧪 Features in Detail
+✅ Transactions
+Add income or expense
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Edit existing records
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Delete unwanted transactions
 
-## Learn More
+✅ Budget
+Set monthly budget per category
 
-To learn more about Next.js, take a look at the following resources:
+Update and manage easily
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+✅ Insights
+Visual comparison between budget and actual
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Monthly bar chart for expenses
 
-## Deploy on Vercel
+Text-based summary insights
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
